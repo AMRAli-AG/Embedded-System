@@ -1,8 +1,7 @@
 /* 
  * File:   application.c
- * Author: Ahmed.Elghafar
- * https://www.linkedin.com/in/ahmedabdelghafarmohammed/
- * Created on November 28, 2020, 8:43 PM
+ * Author: Amr Ali
+ *  Created on August 25, 2023, 2:16 AM
  */
 
 #include "application.h"
