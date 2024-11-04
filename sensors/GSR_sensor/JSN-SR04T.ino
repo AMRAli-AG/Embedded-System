@@ -27,14 +27,6 @@
 # Output:
 # - Serial output displaying the measured distance (in cm) to an object 
 #   in front of the sensor.
-#
-# Notes:
-# - The code compensates for sound speed based on a preset temperature 
-#   (25°C by default). Modify the `temperature` variable for accuracy 
-#   in different environments.
-# - The script takes five readings and calculates an average for better 
-#   accuracy, discarding invalid values that fall outside the sensor's 
-#   effective range.
 ###############################################
 #define echoPin 18 // Define GPIO18 as the echo pin for the JSN-SR04T sensor
 #define trigPin 5  // Define GPIO5 as the trigger pin for the JSN-SR04T sensor                     
