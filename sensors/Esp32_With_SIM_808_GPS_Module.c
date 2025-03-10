@@ -64,7 +64,6 @@ void setupWiFi() {
 void reconnect() {
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    // Attempt to connect with MQTT credentials
     if (mqttClient.connect("ESP32Client", mqtt_user, mqtt_password)) {
       Serial.println("connected");
     } else {
@@ -89,12 +88,11 @@ void handleIncomingSMS() {
     while (mySerial.available()) {
       char c = mySerial.read();
       response += c;
-      delay(10); // Small delay to allow all characters to be received
+      delay(10);
     }
 
     Serial.println("Received SMS: " + response);
 
-    // Parse the response to get the sender number and message
     int senderStart = response.indexOf("+CMT: \"") + 7;
     int senderEnd = response.indexOf("\",\"", senderStart);
     String senderNumber = response.substring(senderStart, senderEnd);
@@ -106,43 +104,33 @@ void handleIncomingSMS() {
     Serial.println("Sender: " + senderNumber);
     Serial.println("Message: " + message);
 
-    // Create JSON object
     StaticJsonDocument<200> doc;
     doc["number"] = senderNumber;
     doc["message"] = message;
     char jsonBuffer[512];
     serializeJson(doc, jsonBuffer);
 
-    // Publish to MQTT
     mqttClient.publish(mqtt_topic_pub, jsonBuffer);
   }
 }
 
 void setup() {
-  // Initialize serial communication for debugging
   Serial.begin(115200);
-  // Initialize UART2 for SIM808
   mySerial.begin(BAUD_RATE, SERIAL_8N1, RX_PIN, TX_PIN);
 
-  delay(500); // Wait for SIM808 to initialize
+  delay(500);
 
-  // Send AT command to check communication
   Serial.println("Sending AT command to check communication...");
   String response = sendAT("AT");
   Serial.println("Response: " + response);
 
   if (response.indexOf("OK") < 0) {
     Serial.println("SIM808 communication failed");
-    while (1); // Halt if communication failed
+    while (1);
   }
 
-  // Set up SIM808 for receiving SMS
   setupSIM808();
-
-  // Set up WiFi connection
   setupWiFi();
-
-  // Set up MQTT connection
   mqttClient.setServer(mqtt_server, mqtt_port);
 }
 
@@ -151,6 +139,5 @@ void loop() {
     reconnect();
   }
   mqttClient.loop();
-
   handleIncomingSMS();
 }
